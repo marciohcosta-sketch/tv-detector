@@ -29,7 +29,6 @@
     overflow-x: hidden;
   }
 
-  /* Animated grid background */
   body::before {
     content: '';
     position: fixed;
@@ -45,166 +44,62 @@
   .container {
     position: relative;
     z-index: 1;
-    max-width: 900px;
+    max-width: 860px;
     margin: 0 auto;
-    padding: 32px 20px 60px;
+    padding: 28px 16px 60px;
   }
 
-  /* Header */
   header {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 48px;
+    gap: 14px;
+    margin-bottom: 28px;
   }
 
   .logo {
-    width: 48px;
-    height: 48px;
+    width: 46px; height: 46px;
     background: linear-gradient(135deg, var(--accent), var(--accent3));
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
     box-shadow: 0 0 20px rgba(0,229,255,0.3);
   }
 
-  header h1 {
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    line-height: 1;
-  }
-
+  header h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
   header h1 span { color: var(--accent); }
-  header p { font-size: 13px; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 4px; }
+  header p { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 3px; }
 
-  /* Main card */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 32px;
-    margin-bottom: 24px;
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 20px;
   }
 
-  /* Visualizer */
-  .visualizer-wrap {
-    position: relative;
-    margin-bottom: 32px;
-  }
-
-  canvas#viz {
-    width: 100%;
-    height: 120px;
-    border-radius: 12px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
+  .field-label {
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
     display: block;
   }
 
-  .status-row {
+  .input-box {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 12px;
-  }
-
-  .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--muted);
-    display: inline-block;
-    margin-right: 8px;
-    transition: background 0.3s;
-  }
-  .dot.active { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 1s infinite; }
-  .dot.analyzing { background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse 0.5s infinite; }
-
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-  #statusText { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); }
-
-  .timer { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); }
-
-  /* Controls */
-  .controls { display: flex; gap: 12px; flex-wrap: wrap; }
-
-  button {
-    font-family: 'Syne', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-    border-radius: 10px;
-    padding: 12px 24px;
-    transition: all 0.2s;
-  }
-
-  #btnRecord {
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    color: #000;
-    flex: 1;
-    min-width: 160px;
-  }
-  #btnRecord:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,229,255,0.35); }
-  #btnRecord:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
-
-  #btnAnalyze {
-    background: var(--surface2);
-    color: var(--text);
-    border: 1px solid var(--border);
-    flex: 1;
-    min-width: 140px;
-  }
-  #btnAnalyze:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  #btnAnalyze:disabled { opacity: 0.35; cursor: not-allowed; }
-
-  #btnClear {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    padding: 12px 16px;
-  }
-  #btnClear:hover { color: var(--accent2); border-color: var(--accent2); }
-
-  /* Duration selector */
-  .duration-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .duration-row label { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; margin-right: 4px; }
-
-  .dur-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 6px 14px;
-    font-size: 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .dur-btn.selected { background: rgba(0,229,255,0.1); border-color: var(--accent); color: var(--accent); }
-
-  /* API Key */
-  .api-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 24px;
     align-items: center;
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 10px 14px;
+    margin-bottom: 14px;
+    gap: 10px;
+    transition: border-color 0.2s;
   }
-  .api-row label { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; white-space: nowrap; }
-  .api-row input {
+  .input-box:focus-within { border-color: var(--accent); }
+  .input-box input {
     flex: 1;
     background: transparent;
     border: none;
@@ -212,187 +107,199 @@
     font-family: 'Space Mono', monospace;
     font-size: 12px;
     outline: none;
+    min-width: 0;
   }
-  .api-row input::placeholder { color: var(--muted); }
+  .input-box input::placeholder { color: var(--muted); }
+  .input-box .iico { font-size: 16px; flex-shrink: 0; }
 
-  /* Transcript */
-  .section-label {
-    font-size: 11px;
-    font-family: 'Space Mono', monospace;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  #transcriptBox {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    color: var(--text);
-    min-height: 80px;
-    max-height: 160px;
-    overflow-y: auto;
-    line-height: 1.7;
-    margin-bottom: 24px;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  /* Result */
-  #resultCard {
-    display: none;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    animation: fadeIn 0.4s ease;
-  }
-
-  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-
-  .result-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-
-  .program-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 26px;
-    flex-shrink: 0;
-  }
-
-  .program-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
-  .program-channel { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); }
-
-  .confidence-bar-wrap { margin: 16px 0; }
-  .confidence-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 6px; }
-  .confidence-bar {
-    height: 6px;
-    background: var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .confidence-fill {
-    height: 100%;
-    border-radius: 3px;
-    background: linear-gradient(90deg, var(--accent3), var(--accent));
-    transition: width 1s cubic-bezier(.4,0,.2,1);
-    width: 0%;
-  }
-
-  .tags-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
-  .tag {
-    font-size: 11px;
-    font-family: 'Space Mono', monospace;
-    padding: 4px 10px;
-    border-radius: 4px;
-    border: 1px solid;
-  }
-  .tag-type { border-color: var(--accent3); color: var(--accent3); background: rgba(162,89,255,0.08); }
-  .tag-tone { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.08); }
-  .tag-keyword { border-color: var(--green); color: var(--green); background: rgba(0,255,157,0.07); }
-  .tag-channel { border-color: var(--accent2); color: var(--accent2); background: rgba(255,61,113,0.08); }
-
-  .analysis-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 16px;
-  }
-  @media(max-width:480px){ .analysis-grid { grid-template-columns: 1fr; } }
-
-  .analysis-item {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-  }
-  .analysis-item .ai-label { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-  .analysis-item .ai-value { font-size: 13px; color: var(--text); line-height: 1.4; }
-
-  .reasoning-box {
-    margin-top: 16px;
-    padding: 14px;
-    background: rgba(0,229,255,0.04);
-    border: 1px solid rgba(0,229,255,0.15);
-    border-radius: 10px;
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.6;
-  }
-
-  /* Loading spinner */
-  .spinner {
-    display: inline-block;
-    width: 14px; height: 14px;
-    border: 2px solid rgba(0,229,255,0.2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-  @keyframes spin { to{transform:rotate(360deg)} }
-
-  /* Error */
-  .error-msg {
-    background: rgba(255,61,113,0.1);
-    border: 1px solid rgba(255,61,113,0.3);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 13px;
-    color: var(--accent2);
-    font-family: 'Space Mono', monospace;
-    margin-top: 16px;
-    display: none;
-  }
-
-  /* Recordings list */
-  #recordingsList { margin-top: 20px; }
-  .rec-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-bottom: 8px;
-    font-size: 12px;
-    font-family: 'Space Mono', monospace;
-    color: var(--muted);
-  }
-  .rec-item .rec-num { color: var(--accent); font-weight: 700; }
-  .rec-item .rec-dur { margin-left: auto; }
-
-  /* Notice */
   .notice {
     background: rgba(162,89,255,0.07);
     border: 1px solid rgba(162,89,255,0.2);
     border-radius: 10px;
-    padding: 12px 16px;
+    padding: 11px 14px;
     font-size: 12px;
     color: var(--muted);
     font-family: 'Space Mono', monospace;
     line-height: 1.6;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
   .notice b { color: var(--accent3); }
+  .notice a { color: var(--accent); text-decoration: none; }
+
+  /* Duration */
+  .dur-row {
+    display: flex; gap: 7px; flex-wrap: wrap; align-items: center; margin-bottom: 20px;
+  }
+  .dur-row .field-label { margin-bottom: 0; }
+  .dur-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 13px;
+    font-size: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    transition: all 0.2s;
+  }
+  .dur-btn.sel { background: rgba(0,229,255,0.1); border-color: var(--accent); color: var(--accent); }
+
+  /* Visualizer */
+  canvas#viz {
+    width: 100%; height: 100px;
+    border-radius: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .status-row {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;
+  }
+
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted); display: inline-block;
+    margin-right: 7px; transition: background 0.3s;
+  }
+  .dot.rec { background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 1s infinite; }
+  .dot.ana { background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: blink 0.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  #statusTxt { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
+  #timerTxt  { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  /* Buttons */
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  button {
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 14px;
+    border: none; cursor: pointer; border-radius: 10px;
+    padding: 13px 22px; transition: all 0.2s;
+  }
+
+  #btnRec {
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    color: #000; flex: 1; min-width: 150px;
+  }
+  #btnRec:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,229,255,0.35); }
+  #btnRec:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  #btnAna {
+    background: var(--surface2); color: var(--text);
+    border: 1px solid var(--border); flex: 1; min-width: 130px;
+  }
+  #btnAna:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  #btnAna:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  #btnClr {
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--border); padding: 13px 15px;
+  }
+  #btnClr:hover { color: var(--accent2); border-color: var(--accent2); }
+
+  /* Rec info */
+  .rec-info {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 14px;
+    font-size: 12px; font-family: 'Space Mono', monospace; color: var(--muted);
+    display: none;
+  }
+  .rec-dot { color: var(--green); }
+  .rec-info .ri-dur { margin-left: auto; }
+
+  /* Section label */
+  .slabel {
+    font-size: 10px; font-family: 'Space Mono', monospace;
+    color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 9px;
+  }
+
+  /* Transcript */
+  #txBox {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px;
+    font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text);
+    min-height: 72px; max-height: 150px; overflow-y: auto;
+    line-height: 1.7; margin-bottom: 20px;
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  /* Error */
+  .err {
+    background: rgba(255,61,113,0.1); border: 1px solid rgba(255,61,113,0.3);
+    border-radius: 10px; padding: 11px 14px;
+    font-size: 12px; color: var(--accent2);
+    font-family: 'Space Mono', monospace; margin-top: 14px; display: none;
+  }
+
+  /* Result */
+  #resCard {
+    display: none;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px;
+    animation: fadeUp 0.4s ease;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+  .res-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
+  .res-ico {
+    width: 50px; height: 50px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+    background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2);
+  }
+  .res-title { font-size: 19px; font-weight: 800; margin-bottom: 3px; }
+  .res-ch { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0; }
+  .tag {
+    font-size: 11px; font-family: 'Space Mono', monospace;
+    padding: 4px 10px; border-radius: 4px; border: 1px solid;
+  }
+  .t-type { border-color: var(--accent3); color: var(--accent3); background: rgba(162,89,255,0.08); }
+  .t-tone { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.08); }
+  .t-kw   { border-color: var(--green); color: var(--green); background: rgba(0,255,157,0.07); }
+  .t-ch   { border-color: var(--accent2); color: var(--accent2); background: rgba(255,61,113,0.08); }
+
+  .conf-wrap { margin: 14px 0; }
+  .conf-lbl { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 5px; }
+  .conf-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .conf-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent3), var(--accent)); transition: width 1s cubic-bezier(.4,0,.2,1); width: 0%; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  @media(max-width:460px){ .grid2 { grid-template-columns: 1fr; } }
+
+  .gitem {
+    background: rgba(255,255,255,0.025); border: 1px solid var(--border);
+    border-radius: 9px; padding: 11px;
+  }
+  .gitem .gl { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+  .gitem .gv { font-size: 12px; color: var(--text); line-height: 1.4; }
+
+  .reasoning {
+    margin-top: 14px; padding: 13px;
+    background: rgba(0,229,255,0.04); border: 1px solid rgba(0,229,255,0.15);
+    border-radius: 10px; font-size: 13px; color: var(--text); line-height: 1.6;
+  }
+
+  .spinner {
+    display: inline-block; width: 13px; height: 13px;
+    border: 2px solid rgba(0,229,255,0.2); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+    vertical-align: middle; margin-right: 6px;
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
 </style>
 </head>
 <body>
 <div class="container">
+
   <header>
     <div class="logo">📺</div>
     <div>
@@ -401,480 +308,401 @@
     </div>
   </header>
 
-  <div class="notice">
-    <b>Como funciona:</b> Coloque o microfone próximo ao televisor → grave o áudio → a IA transcreve e analisa keywords, tom, contexto e conteúdo para identificar o programa e canal.
+  <!-- Config card -->
+  <div class="card">
+    <span class="field-label">sua api key anthropic</span>
+    <div class="input-box">
+      <span class="iico">🔑</span>
+      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" />
+    </div>
+
+    <span class="field-label">url do proxy cloudflare worker</span>
+    <div class="input-box">
+      <span class="iico">🔗</span>
+      <input type="url" id="proxyUrl" placeholder="https://meu-worker.seuusuario.workers.dev" autocomplete="off" />
+    </div>
+
+    <div class="notice">
+      <b>Proxy necessário</b> para funcionar no mobile. Crie grátis em <a href="https://workers.cloudflare.com" target="_blank">workers.cloudflare.com</a> usando o arquivo <b>cloudflare-worker.js</b> que baixou.<br>
+      Se deixar o campo Proxy vazio, tentará conexão direta (pode dar erro de CORS).
+    </div>
   </div>
 
+  <!-- Record card -->
   <div class="card">
-    <!-- API Key -->
-    <div class="api-row">
-      <label>API KEY →</label>
-      <input type="password" id="apiKey" placeholder="sk-ant-api..." />
+    <div class="dur-row">
+      <span class="field-label">duração →</span>
+      <button class="dur-btn" data-s="10">10s</button>
+      <button class="dur-btn sel" data-s="20">20s</button>
+      <button class="dur-btn" data-s="30">30s</button>
+      <button class="dur-btn" data-s="45">45s</button>
+      <button class="dur-btn" data-s="60">60s</button>
     </div>
 
-    <!-- Duration selector -->
-    <div class="duration-row">
-      <label>DURAÇÃO →</label>
-      <button class="dur-btn" data-sec="10">10s</button>
-      <button class="dur-btn selected" data-sec="20">20s</button>
-      <button class="dur-btn" data-sec="30">30s</button>
-      <button class="dur-btn" data-sec="45">45s</button>
-      <button class="dur-btn" data-sec="60">60s</button>
+    <canvas id="viz" width="800" height="100"></canvas>
+
+    <div class="status-row">
+      <div><span class="dot" id="dot"></span><span id="statusTxt">aguardando gravação...</span></div>
+      <span id="timerTxt"></span>
     </div>
 
-    <!-- Visualizer -->
-    <div class="visualizer-wrap">
-      <canvas id="viz" width="800" height="120"></canvas>
-      <div class="status-row">
-        <div>
-          <span class="dot" id="dot"></span>
-          <span id="statusText">aguardando gravação...</span>
-        </div>
-        <span class="timer" id="timer"></span>
-      </div>
-    </div>
-
-    <!-- Controls -->
     <div class="controls">
-      <button id="btnRecord">⏺ Gravar Áudio</button>
-      <button id="btnAnalyze" disabled>🔍 Analisar</button>
-      <button id="btnClear" title="Limpar">✕</button>
+      <button id="btnRec">⏺ Gravar Áudio</button>
+      <button id="btnAna" disabled>🔍 Analisar</button>
+      <button id="btnClr">✕</button>
     </div>
 
-    <div id="recordingsList"></div>
+    <div class="rec-info" id="recInfo">
+      <span class="rec-dot">●</span>
+      <span id="recLabel">áudio capturado</span>
+      <span class="ri-dur" id="recDur"></span>
+    </div>
   </div>
 
   <!-- Transcript -->
-  <div class="card" id="transcriptSection" style="display:none">
-    <div class="section-label">// transcrição</div>
-    <div id="transcriptBox"></div>
-    <div class="error-msg" id="errMsg"></div>
+  <div class="card" id="txSection" style="display:none">
+    <div class="slabel">// transcrição</div>
+    <div id="txBox"></div>
+    <div class="err" id="errMsg"></div>
   </div>
 
   <!-- Result -->
-  <div class="card" id="resultSection" style="display:none">
-    <div class="section-label">// análise · identificação</div>
-    <div id="resultCard"></div>
+  <div class="card" id="resSection" style="display:none">
+    <div class="slabel">// identificação</div>
+    <div id="resCard"></div>
   </div>
+
 </div>
 
 <script>
-// ---- State ----
-let mediaRecorder = null;
-let audioChunks = [];
-let audioBlob = null;
-let isRecording = false;
-let recordDuration = 20;
-let timerInterval = null;
-let timerCount = 0;
-let audioCtx = null;
-let analyser = null;
-let animFrame = null;
-let stream = null;
+// ── State ──────────────────────────────────────────────
+let recorder, chunks = [], blob = null;
+let recording = false, duration = 20;
+let timerInt = null, elapsed = 0;
+let actx = null, analyser = null, raf = null, stream = null;
 
-// ---- DOM ----
-const btnRecord  = document.getElementById('btnRecord');
-const btnAnalyze = document.getElementById('btnAnalyze');
-const btnClear   = document.getElementById('btnClear');
-const dot        = document.getElementById('dot');
-const statusText = document.getElementById('statusText');
-const timerEl    = document.getElementById('timer');
-const transcriptBox    = document.getElementById('transcriptBox');
-const errMsg           = document.getElementById('errMsg');
-const resultCard       = document.getElementById('resultCard');
-const transcriptSection= document.getElementById('transcriptSection');
-const resultSection    = document.getElementById('resultSection');
-const recList          = document.getElementById('recordingsList');
-const canvas           = document.getElementById('viz');
-const ctx2d            = canvas.getContext('2d');
-const apiKeyInput      = document.getElementById('apiKey');
+// ── DOM ────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const btnRec    = $('btnRec');
+const btnAna    = $('btnAna');
+const btnClr    = $('btnClr');
+const dot       = $('dot');
+const statusTxt = $('statusTxt');
+const timerTxt  = $('timerTxt');
+const txBox     = $('txBox');
+const errMsg    = $('errMsg');
+const resCard   = $('resCard');
+const txSection = $('txSection');
+const resSection= $('resSection');
+const recInfo   = $('recInfo');
+const recLabel  = $('recLabel');
+const recDur    = $('recDur');
+const canvas    = $('viz');
+const cx        = canvas.getContext('2d');
+const apiKey    = $('apiKey');
+const proxyUrl  = $('proxyUrl');
 
-// Duration buttons
+// ── Duration buttons ────────────────────────────────────
 document.querySelectorAll('.dur-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    if (isRecording) return;
-    document.querySelectorAll('.dur-btn').forEach(x => x.classList.remove('selected'));
-    b.classList.add('selected');
-    recordDuration = parseInt(b.dataset.sec);
-  });
+  b.onclick = () => {
+    if (recording) return;
+    document.querySelectorAll('.dur-btn').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+    duration = +b.dataset.s;
+  };
 });
 
-// ---- Visualizer ----
+// ── Canvas idle ─────────────────────────────────────────
 function drawIdle() {
   const W = canvas.width, H = canvas.height;
-  ctx2d.clearRect(0, 0, W, H);
-  ctx2d.fillStyle = '#1a1a24';
-  ctx2d.fillRect(0, 0, W, H);
-  ctx2d.strokeStyle = 'rgba(42,42,58,0.8)';
-  ctx2d.lineWidth = 1.5;
-  ctx2d.beginPath();
-  ctx2d.moveTo(0, H/2);
-  ctx2d.lineTo(W, H/2);
-  ctx2d.stroke();
+  cx.fillStyle = '#1a1a24'; cx.fillRect(0,0,W,H);
+  cx.strokeStyle = 'rgba(42,42,58,0.8)'; cx.lineWidth = 1.5;
+  cx.beginPath(); cx.moveTo(0,H/2); cx.lineTo(W,H/2); cx.stroke();
 }
-
-function drawVisualizer() {
-  if (!analyser) return;
-  animFrame = requestAnimationFrame(drawVisualizer);
-  const bufLen = analyser.frequencyBinCount;
-  const data = new Uint8Array(bufLen);
-  analyser.getByteFrequencyData(data);
-
-  const W = canvas.width, H = canvas.height;
-  ctx2d.clearRect(0, 0, W, H);
-  ctx2d.fillStyle = '#1a1a24';
-  ctx2d.fillRect(0, 0, W, H);
-
-  const barW = (W / bufLen) * 2.5;
-  let x = 0;
-  for (let i = 0; i < bufLen; i++) {
-    const barH = (data[i] / 255) * H * 0.85;
-    const hue = 180 + (data[i] / 255) * 100;
-    ctx2d.fillStyle = `hsla(${hue}, 90%, 60%, 0.85)`;
-    ctx2d.fillRect(x, H - barH, barW - 1, barH);
-    x += barW + 1;
-  }
-}
-
 drawIdle();
 
-// ---- Record ----
-btnRecord.addEventListener('click', async () => {
-  if (isRecording) {
-    stopRecording();
-    return;
+function drawViz() {
+  if (!analyser) return;
+  raf = requestAnimationFrame(drawViz);
+  const buf = new Uint8Array(analyser.frequencyBinCount);
+  analyser.getByteFrequencyData(buf);
+  const W = canvas.width, H = canvas.height;
+  cx.fillStyle = '#1a1a24'; cx.fillRect(0,0,W,H);
+  const bw = (W / buf.length) * 2.5;
+  let x = 0;
+  for (let i = 0; i < buf.length; i++) {
+    const bh = (buf[i]/255) * H * 0.85;
+    const hue = 180 + (buf[i]/255)*100;
+    cx.fillStyle = `hsla(${hue},90%,60%,0.85)`;
+    cx.fillRect(x, H-bh, bw-1, bh);
+    x += bw+1;
   }
-  await startRecording();
-});
+}
 
-async function startRecording() {
+// ── Record ──────────────────────────────────────────────
+btnRec.onclick = async () => {
+  if (recording) { stopRec(); return; }
+  await startRec();
+};
+
+async function startRec() {
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch(e) {
-    showError('Acesso ao microfone negado: ' + e.message);
-    return;
+    showErr('Microfone negado: ' + e.message); return;
   }
 
-  audioChunks = [];
-  audioBlob = null;
+  chunks = []; blob = null;
 
-  // Setup analyser
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  analyser = audioCtx.createAnalyser();
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = actx.createAnalyser();
   analyser.fftSize = 256;
-  const src = audioCtx.createMediaStreamSource(stream);
-  src.connect(analyser);
+  actx.createMediaStreamSource(stream).connect(analyser);
 
-  // MediaRecorder
-  const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') 
-    ? 'audio/webm;codecs=opus' 
-    : MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/ogg';
+  const mime = ['audio/webm;codecs=opus','audio/webm','audio/ogg']
+    .find(t => MediaRecorder.isTypeSupported(t)) || '';
 
-  mediaRecorder = new MediaRecorder(stream, { mimeType });
-  mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-  mediaRecorder.onstop = () => {
-    audioBlob = new Blob(audioChunks, { type: mimeType });
-    addRecordingItem(timerCount, mimeType);
-    btnAnalyze.disabled = false;
-    setStatus('idle', `áudio capturado · ${timerCount}s · pronto para análise`);
+  recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : {});
+  recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+  recorder.onstop = () => {
+    blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+    btnAna.disabled = false;
+    recInfo.style.display = 'flex';
+    recLabel.textContent = 'áudio capturado';
+    recDur.textContent = elapsed + 's · ' + (recorder.mimeType||'webm').split('/')[1].split(';')[0];
+    setStatus('idle', 'áudio pronto para análise');
   };
 
-  mediaRecorder.start(250);
-  isRecording = true;
-  timerCount = 0;
+  recorder.start(250);
+  recording = true; elapsed = 0;
+  btnRec.textContent = '⏹ Parar';
+  btnAna.disabled = true;
+  dot.className = 'dot rec';
+  setStatus('rec', 'gravando áudio...');
+  drawViz();
 
-  btnRecord.textContent = '⏹ Parar';
-  btnAnalyze.disabled = true;
-  dot.className = 'dot active';
-  setStatus('recording', 'gravando áudio...');
-  drawVisualizer();
-
-  // Auto-stop timer
-  timerInterval = setInterval(() => {
-    timerCount++;
-    timerEl.textContent = `${timerCount}s / ${recordDuration}s`;
-    if (timerCount >= recordDuration) stopRecording();
+  timerInt = setInterval(() => {
+    elapsed++;
+    timerTxt.textContent = `${elapsed}s / ${duration}s`;
+    if (elapsed >= duration) stopRec();
   }, 1000);
 }
 
-function stopRecording() {
-  if (!isRecording) return;
-  clearInterval(timerInterval);
-  isRecording = false;
-  cancelAnimationFrame(animFrame);
-  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-  if (stream) stream.getTracks().forEach(t => t.stop());
-  btnRecord.textContent = '⏺ Gravar Áudio';
+function stopRec() {
+  if (!recording) return;
+  clearInterval(timerInt); recording = false;
+  cancelAnimationFrame(raf);
+  if (recorder?.state !== 'inactive') recorder.stop();
+  stream?.getTracks().forEach(t => t.stop());
+  btnRec.textContent = '⏺ Gravar Áudio';
   dot.className = 'dot';
-  timerEl.textContent = '';
+  timerTxt.textContent = '';
   drawIdle();
 }
 
-function addRecordingItem(sec, mime) {
-  recList.innerHTML = '';
-  const div = document.createElement('div');
-  div.className = 'rec-item';
-  div.innerHTML = `<span class="rec-num">●</span> áudio capturado <span class="rec-dur">${sec}s · ${mime.split('/')[1].split(';')[0]}</span>`;
-  recList.appendChild(div);
-}
-
-// ---- Clear ----
-btnClear.addEventListener('click', () => {
-  stopRecording();
-  audioBlob = null; audioChunks = [];
-  btnAnalyze.disabled = true;
-  recList.innerHTML = '';
-  transcriptSection.style.display = 'none';
-  resultSection.style.display = 'none';
+// ── Clear ───────────────────────────────────────────────
+btnClr.onclick = () => {
+  stopRec();
+  blob = null; chunks = [];
+  btnAna.disabled = true;
+  recInfo.style.display = 'none';
+  txSection.style.display = 'none';
+  resSection.style.display = 'none';
   errMsg.style.display = 'none';
   setStatus('idle', 'aguardando gravação...');
   drawIdle();
-});
+};
 
-// ---- Analyze ----
-btnAnalyze.addEventListener('click', async () => {
-  if (!audioBlob) { showError('Nenhum áudio gravado.'); return; }
-  const apiKey = apiKeyInput.value.trim();
-  if (!apiKey) { showError('Insira sua API Key da Anthropic.'); return; }
+// ── Analyze ─────────────────────────────────────────────
+btnAna.onclick = async () => {
+  if (!blob) { showErr('Nenhum áudio gravado.'); return; }
+  const key = apiKey.value.trim();
+  if (!key) { showErr('Insira sua API Key da Anthropic.'); return; }
 
-  btnAnalyze.disabled = true;
-  btnRecord.disabled = true;
-  dot.className = 'dot analyzing';
+  btnAna.disabled = true;
+  btnRec.disabled = true;
   errMsg.style.display = 'none';
-
-  transcriptSection.style.display = 'block';
-  resultSection.style.display = 'none';
-  transcriptBox.textContent = '';
-  resultCard.style.display = 'none';
+  txSection.style.display = 'block';
+  resSection.style.display = 'none';
+  resCard.style.display = 'none';
+  txBox.innerHTML = '<span class="spinner"></span> analisando áudio...';
+  dot.className = 'dot ana';
+  setStatus('ana', 'enviando para análise...');
 
   try {
-    // Step 1: Convert audio to base64
-    setStatus('analyzing', 'convertendo áudio...');
-    const base64Audio = await blobToBase64(audioBlob);
+    const b64 = await toBase64(blob);
+    const proxy = proxyUrl.value.trim().replace(/\/$/, '');
+    const endpoint = proxy
+      ? proxy + '/v1/messages'
+      : 'https://api.anthropic.com/v1/messages';
 
-    // Step 2: Transcribe + Analyze with Claude
-    setStatus('analyzing', 'transcrevendo e analisando com IA...');
-    transcriptBox.innerHTML = '<span class="spinner"></span> analisando áudio...';
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+    };
+    if (!proxy) headers['anthropic-dangerous-direct-browser-access'] = 'true';
 
-    const systemPrompt = `Você é um especialista em identificação de programas de televisão brasileira.
-Você receberá um arquivo de áudio capturado perto de uma televisão. 
-Analise o áudio considerando: transcrição do conteúdo falado, keywords identificadas, tom e estilo da narração, tipo de conteúdo, contexto e sotaque.
-Com base nisso, identifique o tipo de programa e tente identificar o canal de TV.
-
-Responda SOMENTE com um JSON válido (sem markdown, sem blocos de código) no formato abaixo:
+    const system = `Você é especialista em identificação de programas de televisão brasileira.
+Receberá áudio capturado próximo a uma TV. Analise transcrição, keywords, tom, estilo e contexto.
+Responda SOMENTE com JSON válido (sem markdown), no formato:
 {
-  "transcript": "transcrição aproximada do que foi dito (ou 'áudio ambiente / sem fala clara' se não houver fala)",
-  "program_type": "ex: Telejornal, Novela, Reality Show, Esporte, Documentário, Entrevista, Série, Filme, Programa de Auditório, Desenho Animado, Religioso, etc",
-  "program_name": "nome do programa se identificado, ou null",
-  "channel": "nome do canal se identificado (Globo, SBT, Record, Band, RedeTV, etc), ou null",
-  "confidence": 0.75,
-  "tone": "descrição do tom: ex: formal, urgente, dramático, descontraído, esportivo, religioso, etc",
-  "keywords": ["lista","de","keywords","identificadas"],
-  "audio_quality": "ex: boa, razoável, ruído de fundo intenso, sem fala detectada",
-  "reasoning": "breve explicação de como chegou a essa conclusão com base no conteúdo, tom, keywords e contexto",
-  "emoji": "emoji representando o tipo de programa"
+  "transcript": "transcrição do que foi dito, ou 'sem fala clara' se não houver",
+  "program_type": "Telejornal|Novela|Reality Show|Esporte|Documentário|Série|Filme|Auditório|Religioso|Infantil|outro",
+  "program_name": "nome do programa ou null",
+  "channel": "Globo|SBT|Record|Band|RedeTV|etc ou null",
+  "confidence": 0.80,
+  "tone": "formal|dramático|descontraído|esportivo|urgente|religioso|infantil|etc",
+  "keywords": ["palavra1","palavra2","palavra3"],
+  "audio_quality": "boa|razoável|ruído intenso|sem fala",
+  "reasoning": "explicação concisa de como chegou à conclusão",
+  "emoji": "emoji do tipo de programa"
 }`;
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true"
-      },
+    const mtype = blob.type.includes('ogg') ? 'audio/ogg' : 'audio/webm';
+
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers,
       body: JSON.stringify({
-        model: "claude-opus-4-5",
+        model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: systemPrompt,
+        system,
         messages: [{
-          role: "user",
-          content: [{
-            type: "document",
-            source: {
-              type: "base64",
-              media_type: audioBlob.type.startsWith('audio/webm') ? 'audio/webm' : 'audio/ogg',
-              data: base64Audio
-            }
-          }, {
-            type: "text",
-            text: "Analise este áudio capturado próximo a uma televisão e identifique o programa conforme instruído."
-          }]
+          role: 'user',
+          content: [
+            { type: 'document', source: { type: 'base64', media_type: mtype, data: b64 } },
+            { type: 'text', text: 'Analise este áudio e identifique o programa de TV.' }
+          ]
         }]
       })
     });
 
-    if (!response.ok) {
-      // Fallback: try text-only analysis asking user for context
-      const errData = await response.json().catch(() => ({}));
-      // If audio document not supported, do text-based prompt
-      if (response.status === 400) {
-        await analyzeWithTranscriptFallback(apiKey);
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      // Se áudio não suportado, tenta só texto
+      if (res.status === 400 || res.status === 415) {
+        await analyzeTextOnly(endpoint, headers, key);
         return;
       }
-      throw new Error(errData.error?.message || `HTTP ${response.status}`);
+      throw new Error(e.error?.message || `HTTP ${res.status}`);
     }
 
-    const data = await response.json();
-    const raw = data.content.map(i => i.text || '').join('');
-    renderResult(raw);
+    const data = await res.json();
+    render(data.content.map(i => i.text||'').join(''));
 
   } catch(e) {
-    showError('Erro: ' + e.message);
-    transcriptBox.textContent = '';
+    showErr('Erro: ' + e.message);
+    txBox.textContent = '';
   } finally {
-    btnAnalyze.disabled = false;
-    btnRecord.disabled = false;
+    btnAna.disabled = false;
+    btnRec.disabled = false;
     dot.className = 'dot';
     setStatus('idle', 'análise concluída');
   }
-});
+};
 
-// Fallback: analyze using audio converted to text prompt describing analysis
-async function analyzeWithTranscriptFallback(apiKey) {
-  transcriptBox.innerHTML = '<span class="spinner"></span> usando modo de análise alternativo...';
-  setStatus('analyzing', 'analisando áudio (modo alternativo)...');
+async function analyzeTextOnly(endpoint, headers, key) {
+  txBox.innerHTML = '<span class="spinner"></span> usando análise alternativa (só texto)...';
+  setStatus('ana', 'análise alternativa...');
 
-  // We'll send a prompt asking Claude to simulate the analysis
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true"
-    },
+  const res = await fetch(endpoint, {
+    method: 'POST', headers,
     body: JSON.stringify({
-      model: "claude-opus-4-5",
-      max_tokens: 1000,
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 800,
       messages: [{
-        role: "user",
-        content: `Você é um sistema de identificação de programas de TV brasileira. 
-O usuário tentou enviar um áudio mas o formato não foi suportado diretamente.
-Forneça uma resposta de exemplo realista mostrando como seria a análise de um telejornal da Globo com boa qualidade de áudio.
-Responda SOMENTE com JSON válido no formato:
+        role: 'user',
+        content: `Você é um sistema de identificação de programas de TV brasileira.
+O formato de áudio enviado não foi processado diretamente.
+Gere um exemplo realista de como seria a análise de um programa.
+Responda SOMENTE com JSON válido:
 {
-  "transcript": "texto de exemplo de transcrição",
+  "transcript": "Boa noite. O presidente se reuniu hoje em Brasília...",
   "program_type": "Telejornal",
   "program_name": "Jornal Nacional",
   "channel": "Globo",
-  "confidence": 0.82,
+  "confidence": 0.75,
   "tone": "formal e informativo",
-  "keywords": ["notícia", "hoje", "brasília", "governo", "economia"],
-  "audio_quality": "Nota: formato de áudio não suportado diretamente - demonstração",
-  "reasoning": "Explicação de exemplo de como o sistema identificaria o programa",
-  "emoji": "📺"
+  "keywords": ["presidente","brasília","reunião","política"],
+  "audio_quality": "DEMO - formato não processado diretamente",
+  "reasoning": "Tom formal, vocabulário jornalístico, menção a figuras políticas e locais governamentais indicam telejornal da Globo.",
+  "emoji": "📰"
 }`
       }]
     })
   });
-
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  const raw = data.content.map(i => i.text || '').join('');
-  renderResult(raw, true);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  render(data.content.map(i => i.text||'').join(''), true);
 }
 
-function renderResult(raw, isDemo = false) {
-  // Parse JSON
-  let parsed;
+// ── Render result ────────────────────────────────────────
+function render(raw, isDemo = false) {
+  let p;
   try {
-    const clean = raw.replace(/```json|```/g, '').trim();
-    parsed = JSON.parse(clean);
-  } catch(e) {
-    transcriptBox.textContent = raw;
-    showError('Erro ao interpretar resposta da IA. Verifique o texto acima.');
+    p = JSON.parse(raw.replace(/```json|```/g,'').trim());
+  } catch {
+    txBox.textContent = raw;
+    showErr('Erro ao interpretar resposta da IA.');
     return;
   }
 
-  // Show transcript
-  transcriptBox.textContent = parsed.transcript || '(sem transcrição)';
+  txBox.textContent = p.transcript || '(sem transcrição)';
 
-  // Build result
-  const conf = Math.round((parsed.confidence || 0.5) * 100);
+  const conf = Math.round((p.confidence || 0.5) * 100);
   const confColor = conf >= 75 ? '#00ff9d' : conf >= 50 ? '#00e5ff' : '#a259ff';
+  const kws = (p.keywords||[]).map(k => `<span class="tag t-kw">${k}</span>`).join('');
+  const demo = isDemo ? `<div style="font-size:10px;color:var(--accent2);font-family:'Space Mono',monospace;margin-bottom:10px">⚠ MODO DEMO · áudio não processado diretamente</div>` : '';
 
-  const keywords = (parsed.keywords || []).map(k =>
-    `<span class="tag tag-keyword">${k}</span>`).join('');
-
-  const demoWarning = isDemo ? `<div style="font-size:11px;color:var(--accent2);font-family:'Space Mono',monospace;margin-bottom:12px;">⚠ MODO DEMO · formato de áudio não suportado diretamente</div>` : '';
-
-  resultCard.innerHTML = `
-    ${demoWarning}
-    <div class="result-header">
-      <div class="program-icon" style="background:rgba(0,229,255,0.12);border:1px solid rgba(0,229,255,0.2)">
-        ${parsed.emoji || '📺'}
-      </div>
+  resCard.innerHTML = `${demo}
+    <div class="res-head">
+      <div class="res-ico">${p.emoji||'📺'}</div>
       <div>
-        <div class="program-title">${parsed.program_name || parsed.program_type || 'Programa identificado'}</div>
-        <div class="program-channel">${parsed.channel ? `Canal: ${parsed.channel}` : 'Canal não identificado'}</div>
+        <div class="res-title">${p.program_name || p.program_type || 'Programa'}</div>
+        <div class="res-ch">${p.channel ? 'Canal: '+p.channel : 'Canal não identificado'}</div>
       </div>
     </div>
-
-    <div class="tags-row">
-      <span class="tag tag-type">${parsed.program_type || 'desconhecido'}</span>
-      <span class="tag tag-tone">${parsed.tone || ''}</span>
-      ${parsed.channel ? `<span class="tag tag-channel">${parsed.channel}</span>` : ''}
+    <div class="tags">
+      <span class="tag t-type">${p.program_type||'desconhecido'}</span>
+      ${p.tone ? `<span class="tag t-tone">${p.tone}</span>` : ''}
+      ${p.channel ? `<span class="tag t-ch">${p.channel}</span>` : ''}
     </div>
-
-    <div class="confidence-bar-wrap">
-      <div class="confidence-label">
-        <span>confiança na identificação</span>
-        <span style="color:${confColor}">${conf}%</span>
-      </div>
-      <div class="confidence-bar">
-        <div class="confidence-fill" id="confFill"></div>
-      </div>
+    <div class="conf-wrap">
+      <div class="conf-lbl"><span>confiança</span><span style="color:${confColor}">${conf}%</span></div>
+      <div class="conf-bar"><div class="conf-fill" id="cf"></div></div>
     </div>
-
-    <div class="section-label" style="margin-top:4px">// keywords detectadas</div>
-    <div class="tags-row">${keywords || '<span style="color:var(--muted);font-size:12px">nenhuma detectada</span>'}</div>
-
-    <div class="analysis-grid">
-      <div class="analysis-item">
-        <div class="ai-label">qualidade do áudio</div>
-        <div class="ai-value">${parsed.audio_quality || '—'}</div>
-      </div>
-      <div class="analysis-item">
-        <div class="ai-label">tipo de conteúdo</div>
-        <div class="ai-value">${parsed.program_type || '—'}</div>
-      </div>
+    <div class="slabel">keywords detectadas</div>
+    <div class="tags">${kws || '<span style="color:var(--muted);font-size:11px">nenhuma</span>'}</div>
+    <div class="grid2">
+      <div class="gitem"><div class="gl">qualidade</div><div class="gv">${p.audio_quality||'—'}</div></div>
+      <div class="gitem"><div class="gl">tipo</div><div class="gv">${p.program_type||'—'}</div></div>
     </div>
+    <div class="slabel" style="margin-top:14px">raciocínio da ia</div>
+    <div class="reasoning">${p.reasoning||'—'}</div>`;
 
-    <div class="section-label" style="margin-top:16px">// raciocínio da IA</div>
-    <div class="reasoning-box">${parsed.reasoning || '—'}</div>
-  `;
-
-  resultCard.style.display = 'block';
-  resultSection.style.display = 'block';
-  resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-  // Animate confidence bar
+  resCard.style.display = 'block';
+  resSection.style.display = 'block';
+  resSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   setTimeout(() => {
-    document.getElementById('confFill').style.width = conf + '%';
-    document.getElementById('confFill').style.background = 
-      `linear-gradient(90deg, var(--accent3), ${confColor})`;
+    const cf = document.getElementById('cf');
+    if (cf) { cf.style.width = conf+'%'; cf.style.background = `linear-gradient(90deg,var(--accent3),${confColor})`; }
   }, 100);
 }
 
-// ---- Helpers ----
-function blobToBase64(blob) {
-  return new Promise((res, rej) => {
-    const reader = new FileReader();
-    reader.onload = () => res(reader.result.split(',')[1]);
-    reader.onerror = () => rej(new Error('Falha ao ler áudio'));
-    reader.readAsDataURL(blob);
+// ── Helpers ──────────────────────────────────────────────
+function toBase64(b) {
+  return new Promise((res,rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = () => rej(new Error('Falha ao ler áudio'));
+    r.readAsDataURL(b);
   });
 }
-
-function setStatus(type, msg) {
-  statusText.textContent = msg;
-}
-
-function showError(msg) {
-  errMsg.textContent = msg;
-  errMsg.style.display = 'block';
-  transcriptSection.style.display = 'block';
+function setStatus(_, msg) { statusTxt.textContent = msg; }
+function showErr(msg) {
+  errMsg.textContent = msg; errMsg.style.display = 'block';
+  txSection.style.display = 'block';
 }
 </script>
 </body>
