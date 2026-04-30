@@ -2,421 +2,295 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TV Detector · Reconhecimento de Programa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TVDetector">
+<meta name="theme-color" content="#0a0a0f">
+<title>TVDetector</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0a0f'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E📺%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #1a1a24;
-    --border: #2a2a3a;
-    --accent: #00e5ff;
-    --accent2: #ff3d71;
-    --accent3: #a259ff;
-    --text: #e8e8f0;
-    --muted: #5a5a7a;
-    --green: #00ff9d;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 28px 16px 60px;
-  }
-
-  header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-
-  .logo {
-    width: 46px; height: 46px;
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-    box-shadow: 0 0 20px rgba(0,229,255,0.3);
-  }
-
-  header h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
-  header h1 span { color: var(--accent); }
-  header p { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 3px; }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 24px;
-    margin-bottom: 20px;
-  }
-
-  .field-label {
-    font-size: 10px;
-    font-family: 'Space Mono', monospace;
-    color: var(--muted);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 7px;
-    display: block;
-  }
-
-  .input-box {
-    display: flex;
-    align-items: center;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 14px;
-    margin-bottom: 14px;
-    gap: 10px;
-    transition: border-color 0.2s;
-  }
-  .input-box:focus-within { border-color: var(--accent); }
-  .input-box input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--text);
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    outline: none;
-    min-width: 0;
-  }
-  .input-box input::placeholder { color: var(--muted); }
-  .input-box .iico { font-size: 16px; flex-shrink: 0; }
-
-  .notice {
-    background: rgba(162,89,255,0.07);
-    border: 1px solid rgba(162,89,255,0.2);
-    border-radius: 10px;
-    padding: 11px 14px;
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-  .notice b { color: var(--accent3); }
-  .notice a { color: var(--accent); text-decoration: none; }
-
-  /* Duration */
-  .dur-row {
-    display: flex; gap: 7px; flex-wrap: wrap; align-items: center; margin-bottom: 20px;
-  }
-  .dur-row .field-label { margin-bottom: 0; }
-  .dur-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 6px 13px;
-    font-size: 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: 'Space Mono', monospace;
-    transition: all 0.2s;
-  }
-  .dur-btn.sel { background: rgba(0,229,255,0.1); border-color: var(--accent); color: var(--accent); }
-
-  /* Visualizer */
-  canvas#viz {
-    width: 100%; height: 100px;
-    border-radius: 10px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  .status-row {
-    display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;
-  }
-
-  .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--muted); display: inline-block;
-    margin-right: 7px; transition: background 0.3s;
-  }
-  .dot.rec { background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 1s infinite; }
-  .dot.ana { background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: blink 0.5s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  #statusTxt { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
-  #timerTxt  { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
-
-  /* Buttons */
-  .controls { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  button {
-    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 14px;
-    border: none; cursor: pointer; border-radius: 10px;
-    padding: 13px 22px; transition: all 0.2s;
-  }
-
-  #btnRec {
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    color: #000; flex: 1; min-width: 150px;
-  }
-  #btnRec:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,229,255,0.35); }
-  #btnRec:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
-
-  #btnAna {
-    background: var(--surface2); color: var(--text);
-    border: 1px solid var(--border); flex: 1; min-width: 130px;
-  }
-  #btnAna:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  #btnAna:disabled { opacity: 0.35; cursor: not-allowed; }
-
-  #btnClr {
-    background: transparent; color: var(--muted);
-    border: 1px solid var(--border); padding: 13px 15px;
-  }
-  #btnClr:hover { color: var(--accent2); border-color: var(--accent2); }
-
-  /* Rec info */
-  .rec-info {
-    display: flex; align-items: center; gap: 8px;
-    padding: 9px 12px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-top: 14px;
-    font-size: 12px; font-family: 'Space Mono', monospace; color: var(--muted);
-    display: none;
-  }
-  .rec-dot { color: var(--green); }
-  .rec-info .ri-dur { margin-left: auto; }
-
-  /* Section label */
-  .slabel {
-    font-size: 10px; font-family: 'Space Mono', monospace;
-    color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase;
-    margin-bottom: 9px;
-  }
-
-  /* Transcript */
-  #txBox {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 10px; padding: 14px;
-    font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text);
-    min-height: 72px; max-height: 150px; overflow-y: auto;
-    line-height: 1.7; margin-bottom: 20px;
-    white-space: pre-wrap; word-break: break-word;
-  }
-
-  /* Error */
-  .err {
-    background: rgba(255,61,113,0.1); border: 1px solid rgba(255,61,113,0.3);
-    border-radius: 10px; padding: 11px 14px;
-    font-size: 12px; color: var(--accent2);
-    font-family: 'Space Mono', monospace; margin-top: 14px; display: none;
-  }
-
-  /* Result */
-  #resCard {
-    display: none;
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 22px;
-    animation: fadeUp 0.4s ease;
-  }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-
-  .res-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
-  .res-ico {
-    width: 50px; height: 50px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px; flex-shrink: 0;
-    background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2);
-  }
-  .res-title { font-size: 19px; font-weight: 800; margin-bottom: 3px; }
-  .res-ch { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); }
-
-  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0; }
-  .tag {
-    font-size: 11px; font-family: 'Space Mono', monospace;
-    padding: 4px 10px; border-radius: 4px; border: 1px solid;
-  }
-  .t-type { border-color: var(--accent3); color: var(--accent3); background: rgba(162,89,255,0.08); }
-  .t-tone { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.08); }
-  .t-kw   { border-color: var(--green); color: var(--green); background: rgba(0,255,157,0.07); }
-  .t-ch   { border-color: var(--accent2); color: var(--accent2); background: rgba(255,61,113,0.08); }
-
-  .conf-wrap { margin: 14px 0; }
-  .conf-lbl { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 5px; }
-  .conf-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-  .conf-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent3), var(--accent)); transition: width 1s cubic-bezier(.4,0,.2,1); width: 0%; }
-
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-  @media(max-width:460px){ .grid2 { grid-template-columns: 1fr; } }
-
-  .gitem {
-    background: rgba(255,255,255,0.025); border: 1px solid var(--border);
-    border-radius: 9px; padding: 11px;
-  }
-  .gitem .gl { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
-  .gitem .gv { font-size: 12px; color: var(--text); line-height: 1.4; }
-
-  .reasoning {
-    margin-top: 14px; padding: 13px;
-    background: rgba(0,229,255,0.04); border: 1px solid rgba(0,229,255,0.15);
-    border-radius: 10px; font-size: 13px; color: var(--text); line-height: 1.6;
-  }
-
-  .spinner {
-    display: inline-block; width: 13px; height: 13px;
-    border: 2px solid rgba(0,229,255,0.2); border-top-color: var(--accent);
-    border-radius: 50%; animation: spin 0.7s linear infinite;
-    vertical-align: middle; margin-right: 6px;
-  }
-  @keyframes spin { to{transform:rotate(360deg)} }
+:root{
+  --bg:#0a0a0f;--surface:#111118;--surface2:#1a1a24;--border:#2a2a3a;
+  --accent:#00e5ff;--accent2:#ff3d71;--accent3:#a259ff;
+  --text:#e8e8f0;--muted:#5a5a7a;--green:#00ff9d;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;
+  min-height:100vh;min-height:-webkit-fill-available;overflow-x:hidden;-webkit-text-size-adjust:100%;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+.wrap{
+  position:relative;z-index:1;max-width:640px;margin:0 auto;
+  padding:calc(env(safe-area-inset-top,0px) + 20px) 16px calc(env(safe-area-inset-bottom,0px) + 44px);
+}
+header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.logo{
+  width:44px;height:44px;flex-shrink:0;border-radius:12px;font-size:22px;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 18px rgba(0,229,255,.3);
+}
+header h1{font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1}
+header h1 span{color:var(--accent)}
+header p{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px}
+#hint{
+  display:none;background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.2);
+  border-radius:12px;padding:11px 14px;font-size:12px;color:var(--accent);
+  font-family:'Space Mono',monospace;line-height:1.6;margin-bottom:14px;text-align:center;
+}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:14px}
+.fl{font-size:10px;font-family:'Space Mono',monospace;color:var(--muted);
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;display:block}
+.ib{
+  display:flex;align-items:center;gap:10px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:10px;padding:11px 14px;
+  margin-bottom:12px;transition:border-color .2s;
+}
+.ib:focus-within{border-color:var(--accent)}
+.ib .ico{font-size:15px;flex-shrink:0}
+.ib input{flex:1;background:transparent;border:none;color:var(--text);
+  font-family:'Space Mono',monospace;font-size:13px;outline:none;min-width:0;
+  -webkit-appearance:none;border-radius:0}
+.ib input::placeholder{color:var(--muted)}
+.notice{
+  background:rgba(162,89,255,.07);border:1px solid rgba(162,89,255,.2);
+  border-radius:10px;padding:11px 14px;font-size:12px;color:var(--muted);
+  font-family:'Space Mono',monospace;line-height:1.6;
+}
+.notice b{color:var(--accent3)}.notice a{color:var(--accent);text-decoration:none}
+.dr{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.dr .fl{margin-bottom:0}
+.db{
+  background:var(--surface2);border:1px solid var(--border);color:var(--muted);
+  padding:7px 13px;font-size:12px;border-radius:8px;cursor:pointer;
+  font-family:'Space Mono',monospace;transition:all .2s;min-height:36px;
+  -webkit-appearance:none;
+}
+.db.s{background:rgba(0,229,255,.1);border-color:var(--accent);color:var(--accent)}
+#viz{width:100%;height:88px;border-radius:10px;background:var(--surface2);
+  border:1px solid var(--border);display:block;margin-bottom:10px;touch-action:none}
+.sr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:7px;transition:background .3s}
+.dot.r{background:var(--green);box-shadow:0 0 8px var(--green);animation:bk 1s infinite}
+.dot.a{background:var(--accent);box-shadow:0 0 8px var(--accent);animation:bk .5s infinite}
+@keyframes bk{0%,100%{opacity:1}50%{opacity:.3}}
+#st,#tt{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)}
+.ctr{display:flex;gap:10px}
+button{
+  font-family:'Syne',sans-serif;font-weight:700;font-size:15px;border:none;
+  cursor:pointer;border-radius:12px;padding:15px 18px;transition:all .2s;
+  -webkit-appearance:none;user-select:none;-webkit-user-select:none;
+}
+#bRec{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#000;flex:1}
+#bRec:active{transform:scale(.97)}
+#bRec:disabled{opacity:.4;cursor:not-allowed}
+#bAna{background:var(--surface2);color:var(--text);border:1px solid var(--border);flex:1}
+#bAna:active:not(:disabled){border-color:var(--accent);color:var(--accent)}
+#bAna:disabled{opacity:.35;cursor:not-allowed}
+#bClr{background:transparent;color:var(--muted);border:1px solid var(--border);padding:15px 13px}
+#bClr:active{color:var(--accent2);border-color:var(--accent2)}
+.pill{display:none;align-items:center;gap:8px;padding:9px 13px;margin-top:12px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  font-size:12px;font-family:'Space Mono',monospace;color:var(--muted)}
+.pill .pd{color:var(--green)}.pill .pr{margin-left:auto}
+.sl{font-size:10px;font-family:'Space Mono',monospace;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+#tx{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:13px;font-family:'Space Mono',monospace;font-size:13px;color:var(--text);
+  min-height:80px;max-height:200px;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  line-height:1.7;margin-bottom:14px;white-space:pre-wrap;word-break:break-word;
+}
+#tx.editing{border-color:var(--accent)}
+#tx[contenteditable=true]:focus{outline:none}
+.err{
+  background:rgba(255,61,113,.1);border:1px solid rgba(255,61,113,.3);
+  border-radius:10px;padding:11px 14px;font-size:12px;color:var(--accent2);
+  font-family:'Space Mono',monospace;margin-top:12px;display:none;line-height:1.5;
+}
+#rc{display:none;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:20px;animation:fu .4s ease}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rh{display:flex;align-items:flex-start;gap:13px;margin-bottom:14px}
+.ri{width:48px;height:48px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2)}
+.rt{font-size:18px;font-weight:800;margin-bottom:3px;line-height:1.2}
+.rch{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tag{font-size:11px;font-family:'Space Mono',monospace;padding:4px 9px;border-radius:4px;border:1px solid}
+.tt{border-color:var(--accent3);color:var(--accent3);background:rgba(162,89,255,.08)}
+.tn{border-color:var(--accent);color:var(--accent);background:rgba(0,229,255,.08)}
+.tk{border-color:var(--green);color:var(--green);background:rgba(0,255,157,.07)}
+.tc{border-color:var(--accent2);color:var(--accent2);background:rgba(255,61,113,.08)}
+.cw{margin:12px 0}
+.cl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:5px}
+.cb{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.cf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent3),var(--accent));transition:width 1s cubic-bezier(.4,0,.2,1);width:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+@media(max-width:360px){.g2{grid-template-columns:1fr}}
+.gi{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:9px;padding:10px}
+.gi .gl{font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.gi .gv{font-size:12px;color:var(--text);line-height:1.4}
+.rsn{margin-top:12px;padding:13px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.15);border-radius:10px;font-size:13px;color:var(--text);line-height:1.6}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,229,255,.2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.partial{color:var(--muted);font-style:italic}
+.help{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:8px;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="container">
 
+<div class="wrap">
   <header>
     <div class="logo">📺</div>
     <div>
       <h1>TV<span>Detector</span></h1>
-      <p>// reconhecimento de programa por áudio</p>
+      <p>// reconhecimento por áudio · v2</p>
     </div>
   </header>
 
-  <!-- Config card -->
+  <div id="hint">📲 Instalar como app: toque em <b>Compartilhar ↑</b> → <b>Adicionar à Tela de Início</b></div>
+
   <div class="card">
-    <span class="field-label">sua api key anthropic</span>
-    <div class="input-box">
-      <span class="iico">🔑</span>
-      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" />
+    <span class="fl">api key anthropic</span>
+    <div class="ib">
+      <span class="ico">🔑</span>
+      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" spellcheck="false">
     </div>
-
-    <span class="field-label">url do proxy cloudflare worker</span>
-    <div class="input-box">
-      <span class="iico">🔗</span>
-      <input type="url" id="proxyUrl" placeholder="https://meu-worker.seuusuario.workers.dev" autocomplete="off" />
+    <span class="fl">url proxy cloudflare worker</span>
+    <div class="ib">
+      <span class="ico">🔗</span>
+      <input type="url" id="proxyUrl" placeholder="https://meu-worker.seuusuario.workers.dev" autocomplete="off" autocorrect="off" spellcheck="false">
     </div>
-
     <div class="notice">
-      <b>Proxy necessário</b> para funcionar no mobile. Crie grátis em <a href="https://workers.cloudflare.com" target="_blank">workers.cloudflare.com</a> usando o arquivo <b>cloudflare-worker.js</b> que baixou.<br>
-      Se deixar o campo Proxy vazio, tentará conexão direta (pode dar erro de CORS).
+      <b>Como funciona:</b> O app usa o reconhecimento de fala do próprio celular para transcrever o áudio da TV em tempo real, depois envia o texto ao Claude para identificar o programa.<br><br>
+      <b>Proxy obrigatório no iOS.</b> Crie grátis em <a href="https://workers.cloudflare.com" target="_blank">workers.cloudflare.com</a>.
     </div>
   </div>
 
-  <!-- Record card -->
   <div class="card">
-    <div class="dur-row">
-      <span class="field-label">duração →</span>
-      <button class="dur-btn" data-s="10">10s</button>
-      <button class="dur-btn sel" data-s="20">20s</button>
-      <button class="dur-btn" data-s="30">30s</button>
-      <button class="dur-btn" data-s="45">45s</button>
-      <button class="dur-btn" data-s="60">60s</button>
+    <div class="dr">
+      <span class="fl">duração →</span>
+      <button class="db" data-s="15">15s</button>
+      <button class="db s" data-s="30">30s</button>
+      <button class="db" data-s="45">45s</button>
+      <button class="db" data-s="60">60s</button>
+      <button class="db" data-s="90">90s</button>
     </div>
-
-    <canvas id="viz" width="800" height="100"></canvas>
-
-    <div class="status-row">
-      <div><span class="dot" id="dot"></span><span id="statusTxt">aguardando gravação...</span></div>
-      <span id="timerTxt"></span>
+    <canvas id="viz" width="600" height="88"></canvas>
+    <div class="sr">
+      <div><span class="dot" id="dot"></span><span id="st">aguardando captura...</span></div>
+      <span id="tt"></span>
     </div>
-
-    <div class="controls">
-      <button id="btnRec">⏺ Gravar Áudio</button>
-      <button id="btnAna" disabled>🔍 Analisar</button>
-      <button id="btnClr">✕</button>
+    <div class="ctr">
+      <button id="bRec">🎙 Capturar</button>
+      <button id="bAna" disabled>🔍 Analisar</button>
+      <button id="bClr">✕</button>
     </div>
-
-    <div class="rec-info" id="recInfo">
-      <span class="rec-dot">●</span>
-      <span id="recLabel">áudio capturado</span>
-      <span class="ri-dur" id="recDur"></span>
+    <div class="pill" id="pill">
+      <span class="pd">●</span>
+      <span id="plb">áudio capturado</span>
+      <span class="pr" id="pdr"></span>
     </div>
+    <div class="help" id="compatHelp"></div>
   </div>
 
-  <!-- Transcript -->
-  <div class="card" id="txSection" style="display:none">
-    <div class="slabel">// transcrição</div>
-    <div id="txBox"></div>
-    <div class="err" id="errMsg"></div>
+  <div class="card" id="txS" style="display:none">
+    <div class="sl">// transcrição (toque para editar)</div>
+    <div id="tx" contenteditable="false"></div>
+    <div class="err" id="em"></div>
   </div>
 
-  <!-- Result -->
-  <div class="card" id="resSection" style="display:none">
-    <div class="slabel">// identificação</div>
-    <div id="resCard"></div>
+  <div class="card" id="reS" style="display:none">
+    <div class="sl">// identificação</div>
+    <div id="rc"></div>
   </div>
-
 </div>
 
 <script>
-// ── State ──────────────────────────────────────────────
-let recorder, chunks = [], blob = null;
-let recording = false, duration = 20;
-let timerInt = null, elapsed = 0;
-let actx = null, analyser = null, raf = null, stream = null;
+'use strict';
 
-// ── DOM ────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const btnRec    = $('btnRec');
-const btnAna    = $('btnAna');
-const btnClr    = $('btnClr');
-const dot       = $('dot');
-const statusTxt = $('statusTxt');
-const timerTxt  = $('timerTxt');
-const txBox     = $('txBox');
-const errMsg    = $('errMsg');
-const resCard   = $('resCard');
-const txSection = $('txSection');
-const resSection= $('resSection');
-const recInfo   = $('recInfo');
-const recLabel  = $('recLabel');
-const recDur    = $('recDur');
-const canvas    = $('viz');
-const cx        = canvas.getContext('2d');
-const apiKey    = $('apiKey');
-const proxyUrl  = $('proxyUrl');
+// ── Detection ──────────────────────────────────────────────
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const isStandalone = window.navigator.standalone === true;
+if (isIOS && isSafari && !isStandalone) document.getElementById('hint').style.display = 'block';
 
-// ── Duration buttons ────────────────────────────────────
-document.querySelectorAll('.dur-btn').forEach(b => {
-  b.onclick = () => {
-    if (recording) return;
-    document.querySelectorAll('.dur-btn').forEach(x => x.classList.remove('sel'));
-    b.classList.add('sel');
-    duration = +b.dataset.s;
-  };
+// ── Web Speech API ─────────────────────────────────────────
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const compatHelp = document.getElementById('compatHelp');
+
+if (!SR) {
+  compatHelp.innerHTML = '⚠ Seu browser não suporta reconhecimento de fala.<br>No iOS use <b>Safari 14.5+</b>; no Android use <b>Chrome</b>.';
+  compatHelp.style.color = 'var(--accent2)';
+} else {
+  compatHelp.textContent = '✓ Reconhecimento de fala disponível neste browser.';
+  compatHelp.style.color = 'var(--green)';
+}
+
+// ── State ──────────────────────────────────────────────────
+let recognition = null;
+let recording = false;
+let duration = 30;
+let elapsed = 0;
+let timerInt = null;
+let raf = null;
+let stream = null;
+let actx = null;
+let analyser = null;
+
+let finalTranscript = '';
+let interimTranscript = '';
+
+// ── DOM ────────────────────────────────────────────────────
+const G = id => document.getElementById(id);
+const bRec = G('bRec'), bAna = G('bAna'), bClr = G('bClr');
+const dot = G('dot'), stEl = G('st'), ttEl = G('tt');
+const txEl = G('tx'), emEl = G('em'), rcEl = G('rc');
+const txS = G('txS'), reS = G('reS'), pill = G('pill');
+const plb = G('plb'), pdr = G('pdr');
+const canvas = G('viz'), cx = canvas.getContext('2d');
+const akEl = G('apiKey'), puEl = G('proxyUrl');
+
+// Toggle edit mode on transcript
+txEl.addEventListener('click', () => {
+  if (txEl.contentEditable !== 'true') {
+    txEl.contentEditable = 'true';
+    txEl.classList.add('editing');
+    txEl.focus();
+  }
 });
 
-// ── Canvas idle ─────────────────────────────────────────
+// ── Saved settings ─────────────────────────────────────────
+try {
+  const sv = JSON.parse(localStorage.getItem('tvd2') || '{}');
+  if (sv.k) akEl.value = sv.k;
+  if (sv.p) puEl.value = sv.p;
+} catch(e) {}
+const save = () => { try { localStorage.setItem('tvd2', JSON.stringify({k:akEl.value,p:puEl.value})); } catch(e){} };
+akEl.addEventListener('blur', save);
+puEl.addEventListener('blur', save);
+
+// ── Duration buttons ───────────────────────────────────────
+document.querySelectorAll('.db').forEach(b => {
+  b.addEventListener('click', () => {
+    if (recording) return;
+    document.querySelectorAll('.db').forEach(x => x.classList.remove('s'));
+    b.classList.add('s');
+    duration = +b.dataset.s;
+  });
+});
+
+// ── Canvas ─────────────────────────────────────────────────
 function drawIdle() {
   const W = canvas.width, H = canvas.height;
   cx.fillStyle = '#1a1a24'; cx.fillRect(0,0,W,H);
-  cx.strokeStyle = 'rgba(42,42,58,0.8)'; cx.lineWidth = 1.5;
+  cx.strokeStyle = 'rgba(42,42,58,.9)'; cx.lineWidth = 1.5;
   cx.beginPath(); cx.moveTo(0,H/2); cx.lineTo(W,H/2); cx.stroke();
 }
 drawIdle();
@@ -431,279 +305,265 @@ function drawViz() {
   const bw = (W / buf.length) * 2.5;
   let x = 0;
   for (let i = 0; i < buf.length; i++) {
-    const bh = (buf[i]/255) * H * 0.85;
-    const hue = 180 + (buf[i]/255)*100;
-    cx.fillStyle = `hsla(${hue},90%,60%,0.85)`;
-    cx.fillRect(x, H-bh, bw-1, bh);
-    x += bw+1;
+    const h = (buf[i]/255) * H * .85;
+    cx.fillStyle = `hsla(${180+(buf[i]/255)*100},85%,58%,.9)`;
+    cx.fillRect(x, H-h, Math.max(bw-1,1), h);
+    x += bw + 1;
   }
 }
 
-// ── Record ──────────────────────────────────────────────
-btnRec.onclick = async () => {
+// ── Capture ────────────────────────────────────────────────
+bRec.addEventListener('click', async () => {
   if (recording) { stopRec(); return; }
   await startRec();
-};
+});
 
 async function startRec() {
+  if (!SR) { showErr('Reconhecimento de fala não suportado neste browser.'); return; }
+
+  // Reset
+  finalTranscript = ''; interimTranscript = '';
+  txS.style.display = 'block';
+  txEl.contentEditable = 'false';
+  txEl.classList.remove('editing');
+  txEl.innerHTML = '<span class="partial">aguardando fala...</span>';
+  emEl.style.display = 'none';
+  reS.style.display = 'none';
+
+  // Mic + visualizer
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
   } catch(e) {
-    showErr('Microfone negado: ' + e.message); return;
+    showErr('Microfone negado: ' + (e.message || e.name));
+    return;
   }
-
-  chunks = []; blob = null;
-
-  actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (actx.state === 'suspended') await actx.resume().catch(()=>{});
   analyser = actx.createAnalyser();
   analyser.fftSize = 256;
   actx.createMediaStreamSource(stream).connect(analyser);
 
-  const mime = ['audio/webm;codecs=opus','audio/webm','audio/ogg']
-    .find(t => MediaRecorder.isTypeSupported(t)) || '';
+  // Speech recognition
+  recognition = new SR();
+  recognition.lang = 'pt-BR';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
 
-  recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : {});
-  recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-  recorder.onstop = () => {
-    blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
-    btnAna.disabled = false;
-    recInfo.style.display = 'flex';
-    recLabel.textContent = 'áudio capturado';
-    recDur.textContent = elapsed + 's · ' + (recorder.mimeType||'webm').split('/')[1].split(';')[0];
-    setStatus('idle', 'áudio pronto para análise');
+  recognition.onresult = (event) => {
+    interimTranscript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0].transcript;
+      if (event.results[i].isFinal) finalTranscript += t + ' ';
+      else interimTranscript += t;
+    }
+    updateTranscript();
   };
 
-  recorder.start(250);
+  recognition.onerror = (e) => {
+    if (e.error === 'no-speech') return; // ignore
+    if (e.error === 'aborted') return;
+    showErr('Reconhecimento: ' + e.error);
+  };
+
+  recognition.onend = () => {
+    // iOS frequently auto-stops; restart if still recording
+    if (recording) {
+      try { recognition.start(); } catch(e) {}
+    }
+  };
+
+  try { recognition.start(); } catch(e) {
+    showErr('Falha ao iniciar: ' + e.message); return;
+  }
+
   recording = true; elapsed = 0;
-  btnRec.textContent = '⏹ Parar';
-  btnAna.disabled = true;
-  dot.className = 'dot rec';
-  setStatus('rec', 'gravando áudio...');
+  bRec.textContent = '⏹ Parar';
+  bAna.disabled = true;
+  dot.className = 'dot r';
+  setSt('capturando áudio da TV...');
   drawViz();
 
   timerInt = setInterval(() => {
     elapsed++;
-    timerTxt.textContent = `${elapsed}s / ${duration}s`;
+    ttEl.textContent = `${elapsed}s / ${duration}s`;
     if (elapsed >= duration) stopRec();
   }, 1000);
 }
 
 function stopRec() {
   if (!recording) return;
-  clearInterval(timerInt); recording = false;
-  cancelAnimationFrame(raf);
-  if (recorder?.state !== 'inactive') recorder.stop();
-  stream?.getTracks().forEach(t => t.stop());
-  btnRec.textContent = '⏺ Gravar Áudio';
+  recording = false;
+  clearInterval(timerInt);
+  cancelAnimationFrame(raf); raf = null;
+  try { recognition && recognition.stop(); } catch(e){}
+  stream?.getTracks().forEach(t => t.stop()); stream = null;
+  analyser = null;
+  bRec.textContent = '🎙 Capturar';
   dot.className = 'dot';
-  timerTxt.textContent = '';
+  ttEl.textContent = '';
   drawIdle();
+
+  const total = (finalTranscript + interimTranscript).trim();
+  if (total.length > 0) {
+    bAna.disabled = false;
+    pill.style.display = 'flex';
+    plb.textContent = 'transcrição capturada';
+    pdr.textContent = total.split(/\s+/).length + ' palavras · ' + elapsed + 's';
+    setSt('texto pronto · toque em Analisar');
+  } else {
+    setSt('nenhuma fala detectada');
+    txEl.innerHTML = '<span class="partial">Nenhuma fala foi detectada. Aproxime o celular da TV ou aumente o volume.</span>';
+  }
 }
 
-// ── Clear ───────────────────────────────────────────────
-btnClr.onclick = () => {
+function updateTranscript() {
+  const f = finalTranscript.trim();
+  const i = interimTranscript.trim();
+  if (!f && !i) {
+    txEl.innerHTML = '<span class="partial">aguardando fala...</span>';
+    return;
+  }
+  txEl.innerHTML = e(f) + (i ? ` <span class="partial">${e(i)}</span>` : '');
+}
+
+// ── Clear ──────────────────────────────────────────────────
+bClr.addEventListener('click', () => {
   stopRec();
-  blob = null; chunks = [];
-  btnAna.disabled = true;
-  recInfo.style.display = 'none';
-  txSection.style.display = 'none';
-  resSection.style.display = 'none';
-  errMsg.style.display = 'none';
-  setStatus('idle', 'aguardando gravação...');
+  finalTranscript = ''; interimTranscript = '';
+  bAna.disabled = true;
+  pill.style.display = 'none';
+  txS.style.display = 'none'; reS.style.display = 'none';
+  emEl.style.display = 'none';
+  setSt('aguardando captura...');
   drawIdle();
-};
+});
 
-// ── Analyze ─────────────────────────────────────────────
-btnAna.onclick = async () => {
-  if (!blob) { showErr('Nenhum áudio gravado.'); return; }
-  const key = apiKey.value.trim();
-  if (!key) { showErr('Insira sua API Key da Anthropic.'); return; }
+// ── Analyze ────────────────────────────────────────────────
+bAna.addEventListener('click', async () => {
+  // Get current text (may have been edited)
+  const transcript = (txEl.innerText || txEl.textContent || '').trim();
+  if (!transcript) { showErr('Sem transcrição para analisar.'); return; }
 
-  btnAna.disabled = true;
-  btnRec.disabled = true;
-  errMsg.style.display = 'none';
-  txSection.style.display = 'block';
-  resSection.style.display = 'none';
-  resCard.style.display = 'none';
-  txBox.innerHTML = '<span class="spinner"></span> analisando áudio...';
-  dot.className = 'dot ana';
-  setStatus('ana', 'enviando para análise...');
+  const key   = akEl.value.trim();
+  const proxy = puEl.value.trim().replace(/\/$/,'');
+  if (!key)   { showErr('Insira sua API Key da Anthropic.'); return; }
+
+  bAna.disabled = true; bRec.disabled = true;
+  emEl.style.display = 'none';
+  reS.style.display = 'none'; rcEl.style.display = 'none';
+  dot.className = 'dot a'; setSt('analisando com IA...');
+
+  // Show spinner inline below transcript
+  const tmpStatus = document.createElement('div');
+  tmpStatus.style.cssText = 'font-size:12px;color:var(--accent);font-family:Space Mono,monospace;margin-top:8px';
+  tmpStatus.innerHTML = '<span class="spin"></span> enviando para Claude...';
+  txS.appendChild(tmpStatus);
 
   try {
-    const b64 = await toBase64(blob);
-    const proxy = proxyUrl.value.trim().replace(/\/$/, '');
-    const endpoint = proxy
-      ? proxy + '/v1/messages'
-      : 'https://api.anthropic.com/v1/messages';
-
-    const headers = {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
+    const url  = (proxy ? proxy : 'https://api.anthropic.com') + '/v1/messages';
+    const hdrs = {
+      'Content-Type':'application/json',
+      'x-api-key':key,
+      'anthropic-version':'2023-06-01'
     };
-    if (!proxy) headers['anthropic-dangerous-direct-browser-access'] = 'true';
+    if (!proxy) hdrs['anthropic-dangerous-direct-browser-access'] = 'true';
 
-    const system = `Você é especialista em identificação de programas de televisão brasileira.
-Receberá áudio capturado próximo a uma TV. Analise transcrição, keywords, tom, estilo e contexto.
-Responda SOMENTE com JSON válido (sem markdown), no formato:
-{
-  "transcript": "transcrição do que foi dito, ou 'sem fala clara' se não houver",
-  "program_type": "Telejornal|Novela|Reality Show|Esporte|Documentário|Série|Filme|Auditório|Religioso|Infantil|outro",
-  "program_name": "nome do programa ou null",
-  "channel": "Globo|SBT|Record|Band|RedeTV|etc ou null",
-  "confidence": 0.80,
-  "tone": "formal|dramático|descontraído|esportivo|urgente|religioso|infantil|etc",
-  "keywords": ["palavra1","palavra2","palavra3"],
-  "audio_quality": "boa|razoável|ruído intenso|sem fala",
-  "reasoning": "explicação concisa de como chegou à conclusão",
-  "emoji": "emoji do tipo de programa"
-}`;
+    const sys = `Você é especialista em identificação de programas de televisão brasileira a partir de transcrições de áudio.
+Recebe transcrição feita pelo reconhecimento de fala do celular (pode conter pequenos erros).
+Analise keywords, tom, estilo, vocabulário, contexto e tente identificar o programa e canal.
+Considere: telejornais (Jornal Nacional, SBT Brasil, Jornal da Record, Jornal da Band etc), novelas, esportes, reality shows, programas religiosos, programas de auditório, etc.
+Responda SOMENTE com JSON válido (sem markdown):
+{"transcript":"texto completo recebido","program_type":"Telejornal|Novela|Reality Show|Esporte|Documentário|Série|Filme|Auditório|Religioso|Infantil|Comercial|outro","program_name":"nome ou null","channel":"Globo|SBT|Record|Band|RedeTV|outro|null","confidence":0.80,"tone":"formal|dramático|descontraído|esportivo|urgente|religioso|infantil|publicitário|etc","keywords":["palavra1","palavra2","palavra3","palavra4","palavra5"],"reasoning":"explicação concisa baseada nas keywords e tom","emoji":"emoji do tipo"}`;
 
-    const mtype = blob.type.includes('ogg') ? 'audio/ogg' : 'audio/webm';
+    const userMsg = `Transcrição capturada de áudio próximo a uma TV (${transcript.split(/\s+/).length} palavras):\n\n"""\n${transcript}\n"""\n\nIdentifique o programa e canal.`;
 
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers,
+    const res = await fetch(url, {
+      method:'POST', headers: hdrs,
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'document', source: { type: 'base64', media_type: mtype, data: b64 } },
-            { type: 'text', text: 'Analise este áudio e identifique o programa de TV.' }
-          ]
-        }]
+        system: sys,
+        messages:[{role:'user', content: userMsg}]
       })
     });
 
+    tmpStatus.remove();
+
     if (!res.ok) {
-      const e = await res.json().catch(() => ({}));
-      // Se áudio não suportado, tenta só texto
-      if (res.status === 400 || res.status === 415) {
-        await analyzeTextOnly(endpoint, headers, key);
-        return;
-      }
-      throw new Error(e.error?.message || `HTTP ${res.status}`);
+      const er = await res.json().catch(()=>({}));
+      throw new Error(er.error?.message || `HTTP ${res.status}`);
     }
 
-    const data = await res.json();
-    render(data.content.map(i => i.text||'').join(''));
+    const d = await res.json();
+    render(d.content.map(i=>i.text||'').join(''), transcript);
 
-  } catch(e) {
-    showErr('Erro: ' + e.message);
-    txBox.textContent = '';
+  } catch(err) {
+    try { tmpStatus.remove(); } catch(e){}
+    showErr('Erro: ' + err.message);
   } finally {
-    btnAna.disabled = false;
-    btnRec.disabled = false;
-    dot.className = 'dot';
-    setStatus('idle', 'análise concluída');
+    bAna.disabled = false; bRec.disabled = false;
+    dot.className = 'dot'; setSt('análise concluída');
   }
-};
+});
 
-async function analyzeTextOnly(endpoint, headers, key) {
-  txBox.innerHTML = '<span class="spinner"></span> usando análise alternativa (só texto)...';
-  setStatus('ana', 'análise alternativa...');
-
-  const res = await fetch(endpoint, {
-    method: 'POST', headers,
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 800,
-      messages: [{
-        role: 'user',
-        content: `Você é um sistema de identificação de programas de TV brasileira.
-O formato de áudio enviado não foi processado diretamente.
-Gere um exemplo realista de como seria a análise de um programa.
-Responda SOMENTE com JSON válido:
-{
-  "transcript": "Boa noite. O presidente se reuniu hoje em Brasília...",
-  "program_type": "Telejornal",
-  "program_name": "Jornal Nacional",
-  "channel": "Globo",
-  "confidence": 0.75,
-  "tone": "formal e informativo",
-  "keywords": ["presidente","brasília","reunião","política"],
-  "audio_quality": "DEMO - formato não processado diretamente",
-  "reasoning": "Tom formal, vocabulário jornalístico, menção a figuras políticas e locais governamentais indicam telejornal da Globo.",
-  "emoji": "📰"
-}`
-      }]
-    })
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  render(data.content.map(i => i.text||'').join(''), true);
-}
-
-// ── Render result ────────────────────────────────────────
-function render(raw, isDemo = false) {
+// ── Render ─────────────────────────────────────────────────
+function render(raw, originalTranscript) {
   let p;
   try {
-    p = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    let clean = raw.replace(/```json|```/g,'').trim();
+    // Find first { and last }
+    const a = clean.indexOf('{'), b = clean.lastIndexOf('}');
+    if (a >= 0 && b > a) clean = clean.slice(a, b+1);
+    p = JSON.parse(clean);
   } catch {
-    txBox.textContent = raw;
-    showErr('Erro ao interpretar resposta da IA.');
+    showErr('Erro ao interpretar resposta da IA.\n\nResposta bruta:\n' + raw.substring(0,300));
     return;
   }
 
-  txBox.textContent = p.transcript || '(sem transcrição)';
+  const conf = Math.round((p.confidence||.5)*100);
+  const cc = conf>=75?'#00ff9d':conf>=50?'#00e5ff':'#a259ff';
+  const kws = (p.keywords||[]).map(k=>`<span class="tag tk">${e(k)}</span>`).join('');
 
-  const conf = Math.round((p.confidence || 0.5) * 100);
-  const confColor = conf >= 75 ? '#00ff9d' : conf >= 50 ? '#00e5ff' : '#a259ff';
-  const kws = (p.keywords||[]).map(k => `<span class="tag t-kw">${k}</span>`).join('');
-  const demo = isDemo ? `<div style="font-size:10px;color:var(--accent2);font-family:'Space Mono',monospace;margin-bottom:10px">⚠ MODO DEMO · áudio não processado diretamente</div>` : '';
+  rcEl.innerHTML = `
+  <div class="rh">
+    <div class="ri">${p.emoji||'📺'}</div>
+    <div>
+      <div class="rt">${e(p.program_name||p.program_type||'Programa')}</div>
+      <div class="rch">${p.channel?'Canal: '+e(p.channel):'Canal não identificado'}</div>
+    </div>
+  </div>
+  <div class="tags">
+    <span class="tag tt">${e(p.program_type||'desconhecido')}</span>
+    ${p.tone?`<span class="tag tn">${e(p.tone)}</span>`:''}
+    ${p.channel?`<span class="tag tc">${e(p.channel)}</span>`:''}
+  </div>
+  <div class="cw">
+    <div class="cl"><span>confiança</span><span style="color:${cc}">${conf}%</span></div>
+    <div class="cb"><div class="cf" id="cf"></div></div>
+  </div>
+  <div class="sl" style="margin-top:4px">keywords detectadas</div>
+  <div class="tags">${kws||'<span style="color:var(--muted);font-size:11px">nenhuma</span>'}</div>
+  <div class="g2">
+    <div class="gi"><div class="gl">tipo</div><div class="gv">${e(p.program_type||'—')}</div></div>
+    <div class="gi"><div class="gl">tom</div><div class="gv">${e(p.tone||'—')}</div></div>
+  </div>
+  <div class="sl" style="margin-top:14px">raciocínio da ia</div>
+  <div class="rsn">${e(p.reasoning||'—')}</div>`;
 
-  resCard.innerHTML = `${demo}
-    <div class="res-head">
-      <div class="res-ico">${p.emoji||'📺'}</div>
-      <div>
-        <div class="res-title">${p.program_name || p.program_type || 'Programa'}</div>
-        <div class="res-ch">${p.channel ? 'Canal: '+p.channel : 'Canal não identificado'}</div>
-      </div>
-    </div>
-    <div class="tags">
-      <span class="tag t-type">${p.program_type||'desconhecido'}</span>
-      ${p.tone ? `<span class="tag t-tone">${p.tone}</span>` : ''}
-      ${p.channel ? `<span class="tag t-ch">${p.channel}</span>` : ''}
-    </div>
-    <div class="conf-wrap">
-      <div class="conf-lbl"><span>confiança</span><span style="color:${confColor}">${conf}%</span></div>
-      <div class="conf-bar"><div class="conf-fill" id="cf"></div></div>
-    </div>
-    <div class="slabel">keywords detectadas</div>
-    <div class="tags">${kws || '<span style="color:var(--muted);font-size:11px">nenhuma</span>'}</div>
-    <div class="grid2">
-      <div class="gitem"><div class="gl">qualidade</div><div class="gv">${p.audio_quality||'—'}</div></div>
-      <div class="gitem"><div class="gl">tipo</div><div class="gv">${p.program_type||'—'}</div></div>
-    </div>
-    <div class="slabel" style="margin-top:14px">raciocínio da ia</div>
-    <div class="reasoning">${p.reasoning||'—'}</div>`;
-
-  resCard.style.display = 'block';
-  resSection.style.display = 'block';
-  resSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  setTimeout(() => {
+  rcEl.style.display = 'block';
+  reS.style.display = 'block';
+  reS.scrollIntoView({behavior:'smooth',block:'nearest'});
+  setTimeout(()=>{
     const cf = document.getElementById('cf');
-    if (cf) { cf.style.width = conf+'%'; cf.style.background = `linear-gradient(90deg,var(--accent3),${confColor})`; }
-  }, 100);
+    if (cf){cf.style.width=conf+'%';cf.style.background=`linear-gradient(90deg,var(--accent3),${cc})`;}
+  }, 80);
 }
 
-// ── Helpers ──────────────────────────────────────────────
-function toBase64(b) {
-  return new Promise((res,rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = () => rej(new Error('Falha ao ler áudio'));
-    r.readAsDataURL(b);
-  });
-}
-function setStatus(_, msg) { statusTxt.textContent = msg; }
-function showErr(msg) {
-  errMsg.textContent = msg; errMsg.style.display = 'block';
-  txSection.style.display = 'block';
-}
+// ── Helpers ────────────────────────────────────────────────
+function setSt(msg){ stEl.textContent = msg; }
+function showErr(msg){ emEl.textContent=msg; emEl.style.display='block'; txS.style.display='block'; }
+function e(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
